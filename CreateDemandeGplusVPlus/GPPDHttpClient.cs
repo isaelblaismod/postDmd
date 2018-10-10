@@ -12,13 +12,15 @@ using System.Net;
 using System.Web.Script.Serialization;
 using System.IO;
 using System.Diagnostics;
+using CreateDemandeGplusVPlus.JsonObjects.BodyRequest;
 
 namespace CreateDemandeGplusVPlus
 {
     static class GPPDHttpClient
     {
-        public static void doPostJSON(BodyRequest JSONObject)
+        public static string doPostJSON(BodyRequest JSONObject)
         {
+            var responseResult = "";
             var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:3000/quebec/demandes/");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
@@ -33,29 +35,11 @@ namespace CreateDemandeGplusVPlus
             var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
             using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
             {
-                var result = streamReader.ReadToEnd();
-            }
-            
-        }
-
-        public static void doPostJSON(List<BodyRequest> JSONObject)
-        {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:3000/quebec/demandes/");
-            httpWebRequest.ContentType = "application/json";
-            httpWebRequest.Method = "POST";
-
-            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-            {
-                string json = new JavaScriptSerializer().Serialize(JSONObject);
-
-                streamWriter.Write(json);
+                responseResult = streamReader.ReadToEnd();
             }
 
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-            {
-                var result = streamReader.ReadToEnd();
-            }
+            return responseResult;
+
 
         }
 
